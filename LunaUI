@@ -1284,7 +1284,7 @@ DRR_MODULES[DRR["93"]] = {
 		local twServ = game:GetService("TweenService")
 		local UIS = game:GetService("UserInputService")
 		local GlobalColor1 = Color3.fromRGB(39, 44, 61)
-		local GlobalColor2 = Color3.fromRGB(0, 255, 38)
+		local GlobalColor2 = Color3.fromRGB(85, 0, 127)
 		local closed = false
 
 		parent.TopBar.ProfileMenu.PlayerProfile.TextLabel.Text = game:GetService("Players").LocalPlayer.DisplayName
@@ -1317,12 +1317,14 @@ DRR_MODULES[DRR["93"]] = {
 			end
 
 
-			parent.TopBar.TopBarClose.MouseButton1Click:Connect(function()
+			local UIS = game:GetService("UserInputService")
+
+			local function toggleMenu()
 				if closed == false then
 					closed = true
-					local tw = twServ:Create(parent.MainBar, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0,-0.612, 0) })
-					local tw3 = twServ:Create(parent.TopBar.TopBarClose, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Position = UDim2.new(0.916, 0,0.95, 0) })
-					local tw2 = twServ:Create(parent.TopBar, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0,-0.173, 0) })
+					local tw = twServ:Create(parent.MainBar, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0, -0.612, 0) })
+					local tw3 = twServ:Create(parent.TopBar.TopBarClose, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Position = UDim2.new(0.916, 0, 0.95, 0) })
+					local tw2 = twServ:Create(parent.TopBar, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0, -0.173, 0) })
 					local twRotate = twServ:Create(parent.TopBar.TopBarClose.ImageLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Rotation = 180 })
 
 					tw:Play()
@@ -1332,11 +1334,11 @@ DRR_MODULES[DRR["93"]] = {
 					twRotate:Play()
 					tw3:Play()
 
-				elseif closed == true then
+				else
 					closed = false
-					local tw = twServ:Create(parent.MainBar, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0,0.212, 0) })
-					local tw3 = twServ:Create(parent.TopBar.TopBarClose, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Position = UDim2.new(0.916, 0,0.52, 0) })
-					local tw2 = twServ:Create(parent.TopBar, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0,0.012, 0) })
+					local tw = twServ:Create(parent.MainBar, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0, 0.212, 0) })
+					local tw3 = twServ:Create(parent.TopBar.TopBarClose, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Position = UDim2.new(0.916, 0, 0.52, 0) })
+					local tw2 = twServ:Create(parent.TopBar, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { Position = UDim2.new(0.23, 0, 0.012, 0) })
 					local twRotate = twServ:Create(parent.TopBar.TopBarClose.ImageLabel, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), { Rotation = 0 })
 
 					tw:Play()
@@ -1346,7 +1348,20 @@ DRR_MODULES[DRR["93"]] = {
 					twRotate:Play()
 					tw3:Play()
 				end
+			end
+
+			-- Clique no botão fecha/abre
+			parent.TopBar.TopBarClose.MouseButton1Click:Connect(toggleMenu)
+
+			-- Tecla K no PC abre/fecha
+			UIS.InputBegan:Connect(function(input, gameProcessed)
+				if gameProcessed then return end -- não executa se estiver digitando no chat ou outra UI
+
+				if input.KeyCode == Enum.KeyCode.K then
+					toggleMenu()
+				end
 			end)
+
 
 
 			function self:Open()
@@ -1421,7 +1436,7 @@ DRR_MODULES[DRR["93"]] = {
 							if v.BackgroundColor3 == Color3.fromRGB(39, 44, 61) then
 								v.BackgroundColor3 = color
 								GlobalColor1 = color
-							elseif v.BackgroundColor3 == Color3.fromRGB(0, 255, 38) then
+							elseif v.BackgroundColor3 == Color3.fromRGB(85, 0, 127) then
 								v.BackgroundColor3 = color2
 								GlobalColor2 = color2
 							end
@@ -1442,13 +1457,13 @@ DRR_MODULES[DRR["93"]] = {
 
 
 
-		function UILIB.newTab(name, img)	
+		function UILIB.newTab(name, img, a)	
 			local self = setmetatable({}, UILIB)
 
 			local newTab = parent.Folder.TabReserved:Clone()
 			newTab.Parent = parent.MainBar
 			newTab.Name = name
-			newTab.Visible = false
+			newTab.Visible = a
 
 			local newTabBtn = parent.Folder.TabButtonReserved:Clone()
 			newTabBtn.Parent = parent.TopBar.ScrollingFrame
