@@ -1,346 +1,96 @@
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
---local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/Manager"))()
+local Luna = loadstring(game:HttpGet("https://raw.githubusercontent.com/Nebula-Softworks/Luna-Interface-Suite/refs/heads/main/source.lua", true))()
 
-local screenSize = workspace.CurrentCamera.ViewportSize
+local Window = Luna:CreateWindow({
+	Name = "Biel Menu - by Biel Menu", -- This Is Title Of Your Window
+	Subtitle = nil, -- A Gray Subtitle next To the main title.
+	LogoID = "82795327169782", -- The Asset ID of your logo. Set to nil if you do not have a logo for Luna to use.
+	LoadingEnabled = true, -- Whether to enable the loading animation. Set to false if you do not want the loading screen or have your own custom one.
+	LoadingTitle = "Biel Menu Carregando", -- Header for loading screen
+	LoadingSubtitle = "by Biel Menu", -- Subtitle for loading screen
 
--- Calculando as larguras e alturas baseadas nas proporções
-local width = screenSize.X * 0.7  -- 60% da largura da tela
-local height = screenSize.Y * 0.95 -- 95% da altura da tela
+	ConfigSettings = {
+		RootFolder = nil, -- The Root Folder Is Only If You Have A Hub With Multiple Game Scripts and u may remove it. DO NOT ADD A SLASH
+		ConfigFolder = "Big Hub" -- The Name Of The Folder Where Luna Will Store Configs For This Script. DO NOT ADD A SLASH
+	},
 
-
-local Window = Fluent:CreateWindow({
-	Title = "💥Biel Menu New | Biel Menu De Volta💥",
-	SubTitle = "by Biel Menu2",
-	TabWidth = 160,
-	Size = UDim2.fromOffset(width, height),
-	Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
-	Theme = "Amethyst",
-	MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+	KeySystem = false, -- As Of Beta 6, Luna Has officially Implemented A Key System!
+	KeySettings = {
+		Title = "Luna Example Key",
+		Subtitle = "Key System",
+		Note = "Best Key System Ever! Also, Please Use A HWID Keysystem like Pelican, Luarmor etc. that provide key strings based on your HWID since putting a simple string is very easy to bypass",
+		SaveInRoot = false, -- Enabling will save the key in your RootFolder (YOU MUST HAVE ONE BEFORE ENABLING THIS OPTION)
+		SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+		Key = {"Example Key"}, -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
+		SecondAction = {
+			Enabled = true, -- Set to false if you do not want a second action,
+			Type = "Link", -- Link / Discord.
+			Parameter = "" -- If Type is Discord, then put your invite link (DO NOT PUT DISCORD.GG/). Else, put the full link of your key system here.
+		}
+	}
 })
 
---Fluent provides Lucide Icons https://lucide.dev/icons/ for the tabs, icons are optional
-local Tabs = {
-	Main = Window:AddTab({ Title = "Main", Icon = "component" }),
-	Settings = Window:AddTab({ Title = "Configuração", Icon = "settings" })
-}
-
-local Options = Fluent.Options
-
-do
-	Fluent:Notify({
-		Title = "🚀 - Biel Menu Online",
-		Content = "Tudo pronto! Explore as funções agora mesmo.",
-		SubContent = "Dúvidas? Chama no suporte! 😉",
-		Duration = 5
-	})
-
-
-
-
-	Tabs.Main:AddParagraph({
-		Title = "🌟 Obrigado por Usar o Biel Menu 🌟",
-		Content = "Seu suporte faz este projeto continuar!\nSe divirta e aproveite ao máximo todas as funções.\n🔧 Atualizações em breve!"
-	})
-
-
-
-
-	Tabs.Main:AddButton({
-		Title = "Puxar Items - Novo",
-		Description = "Puxe o Items Do Jogador!",
-		Callback = function()
-			Window:Dialog({
-				Title = "Puxar Items",
-				Content = "Puxa Todos Os Items Do Jogador Quê Você Está Revistando!",
-				Buttons = {
-					{
-						Title = "Ativar",
-						Callback = function()
-							print("Confirmed the dialog.")
-						end
-					},
-					{
-						Title = "Cancelar",
-						Callback = function()
-							print("Cancelled the dialog.")
-						end
-					}
-				}
-			})
-		end
-	})
-
-
-
-	local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Toggle", Default = false })
-
-	Toggle:OnChanged(function()
-		print("Toggle changed:", Options.MyToggle.Value)
-	end)
-
-	Options.MyToggle:SetValue(false)
-
-
-
-	local Slider = Tabs.Main:AddSlider("Slider", {
-		Title = "Slider",
-		Description = "This is a slider",
-		Default = 2,
-		Min = 0,
-		Max = 5,
-		Rounding = 1,
-		Callback = function(Value)
-			print("Slider was changed:", Value)
-		end
-	})
-
-	Slider:OnChanged(function(Value)
-		print("Slider changed:", Value)
-	end)
-
-	Slider:SetValue(3)
-
-
-
-	local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
-		Title = "Dropdown",
-		Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
-		Multi = false,
-		Default = 1,
-	})
-
-	Dropdown:SetValue("four")
-
-	Dropdown:OnChanged(function(Value)
-		print("Dropdown changed:", Value)
-	end)
-
-
-
-	local MultiDropdown = Tabs.Main:AddDropdown("MultiDropdown", {
-		Title = "Dropdown",
-		Description = "You can select multiple values.",
-		Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
-		Multi = true,
-		Default = {"seven", "twelve"},
-	})
-
-	MultiDropdown:SetValue({
-		three = true,
-		five = true,
-		seven = false
-	})
-
-	MultiDropdown:OnChanged(function(Value)
-		local Values = {}
-		for Value, State in next, Value do
-			table.insert(Values, Value)
-		end
-		print("Mutlidropdown changed:", table.concat(Values, ", "))
-	end)
-
-
-
-	local Colorpicker = Tabs.Main:AddColorpicker("Colorpicker", {
-		Title = "Colorpicker",
-		Default = Color3.fromRGB(96, 205, 255)
-	})
-
-	Colorpicker:OnChanged(function()
-		print("Colorpicker changed:", Colorpicker.Value)
-	end)
-
-	Colorpicker:SetValueRGB(Color3.fromRGB(0, 255, 140))
-
-
-
-	local TColorpicker = Tabs.Main:AddColorpicker("TransparencyColorpicker", {
-		Title = "Colorpicker",
-		Description = "but you can change the transparency.",
-		Transparency = 0,
-		Default = Color3.fromRGB(96, 205, 255)
-	})
-
-	TColorpicker:OnChanged(function()
-		print(
-			"TColorpicker changed:", TColorpicker.Value,
-			"Transparency:", TColorpicker.Transparency
-		)
-	end)
-
-
-
-	local Keybind = Tabs.Main:AddKeybind("Keybind", {
-		Title = "KeyBind",
-		Mode = "Toggle", -- Always, Toggle, Hold
-		Default = "LeftControl", -- String as the name of the keybind (MB1, MB2 for mouse buttons)
-
-		-- Occurs when the keybind is clicked, Value is `true`/`false`
-		Callback = function(Value)
-			print("Keybind clicked!", Value)
-		end,
-
-		-- Occurs when the keybind itself is changed, `New` is a KeyCode Enum OR a UserInputType Enum
-		ChangedCallback = function(New)
-			print("Keybind changed!", New)
-		end
-	})
-
-	-- OnClick is only fired when you press the keybind and the mode is Toggle
-	-- Otherwise, you will have to use Keybind:GetState()
-	Keybind:OnClick(function()
-		print("Keybind clicked:", Keybind:GetState())
-	end)
-
-	Keybind:OnChanged(function()
-		print("Keybind changed:", Keybind.Value)
-	end)
-
-	task.spawn(function()
-		while true do
-			wait(1)
-
-			-- example for checking if a keybind is being pressed
-			local state = Keybind:GetState()
-			if state then
-				print("Keybind is being held down")
-			end
-
-			if Fluent.Unloaded then break end
-		end
-	end)
-
-	Keybind:SetValue("MB2", "Toggle") -- Sets keybind to MB2, mode to Hold
-
-
-	local Input = Tabs.Main:AddInput("Input", {
-		Title = "Input",
-		Default = "Default",
-		Placeholder = "Placeholder",
-		Numeric = false, -- Only allows numbers
-		Finished = false, -- Only calls callback when you press enter
-		Callback = function(Value)
-			print("Input changed:", Value)
-		end
-	})
-
-	Input:OnChanged(function()
-		print("Input updated:", Input.Value)
-	end)
-end
-
-
--- Addons:
--- SaveManager (Allows you to have a configuration system)
--- InterfaceManager (Allows you to have a interface managment system)
-
--- Hand the library over to our managers
---SaveManager:SetLibrary(Fluent)
-InterfaceManager:SetLibrary(Fluent)
-
--- Ignore keys that are used by ThemeManager.
--- (we dont want configs to save themes, do we?)
---SaveManager:IgnoreThemeSettings()
-
--- You can add indexes of elements the save manager should ignore
---SaveManager:SetIgnoreIndexes({})
-
--- use case for doing it this way:
--- a script hub could have themes in a global folder
--- and game configs in a separate folder per game
-InterfaceManager:SetFolder("FluentScriptHub")
---SaveManager:SetFolder("FluentScriptHub/specific-game")
-
-InterfaceManager:BuildInterfaceSection(Tabs.Settings)
---SaveManager:BuildConfigSection(Tabs.Settings)
-
-
-Window:SelectTab(1)
-
-Fluent:Notify({
-	Title = "Fluent",
-	Content = "The script has been loaded.",
-	Duration = 8
+local Tab = Window:CreateTab({
+	Name = "Main",
+	Icon = "view_in_ar",
+	ImageSource = "Material",
+	ShowTitle = true -- This will determine whether the big header text in the tab will show
 })
 
--- You can use the SaveManager:LoadAutoloadConfig() to load a config
--- which has been marked to be one that auto loads!
---SaveManager:LoadAutoloadConfig()
-
--- By Conta Teste
-
-local textura = "" -- Exemplo: rbxassetid://asset_id
-local nomeBotao = "BotaoArrastavel"
-
-local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-if playerGui:FindFirstChild("BotaoMovel") and playerGui.BotaoMovel:FindFirstChild(nomeBotao) then
-	return
-end
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Name = "BotaoMovel"
-ScreenGui.Parent = playerGui
-
-local Botao = Instance.new("ImageButton")
-Botao.Size = UDim2.new(0, 50, 0, 50)
-Botao.Position = UDim2.new(0, 0, 0.454706937, 0)
-Botao.AutoButtonColor = true
-Botao.BorderSizePixel = 0
-Botao.Name = nomeBotao
-Botao.Parent = ScreenGui
-
-local UICorner = Instance.new("UICorner", Botao)
-UICorner.CornerRadius = UDim.new(0, 12)
-
-if textura == "" then
-	Botao.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Botao.BackgroundTransparency = 0
-	Botao.Image = ""
-else
-	Botao.BackgroundTransparency = 0
-	Botao.Image = textura
-	Botao.ScaleType = Enum.ScaleType.Stretch
-end
-
-local UserInputService = game:GetService("UserInputService")
-local dragging = false
-local dragInput, dragStart, startPos
-
-Botao.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragStart = input.Position
-		startPos = Botao.Position
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
+local Button = Tab:CreateButton({
+	Name = "Button Example!",
+	Description = nil, -- Creates A Description For Users to know what the button does (looks bad if you use it all the time),
+	Callback = function()
+		-- The function that takes place when the button is pressed
 	end
-end)
+})
 
-Botao.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-		dragInput = input
+local Toggle = Tab:CreateToggle({
+	Name = "Toggle Example",
+	Description = nil,
+	CurrentValue = false,
+	Callback = function(Value)
+		-- The function that takes place when the toggle is switched
+		-- The variable (Value) is a boolean on whether the toggle is true or false
 	end
-end)
+}, "Toggle") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
-UserInputService.InputChanged:Connect(function(input)
-	if input == dragInput and dragging then
-		local delta = input.Position - dragStart
-		Botao.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
+local Slider = Tab:CreateSlider({
+	Name = "Slider Example",
+	Range = {0, 200}, -- The Minimum And Maximum Values Respectively
+	Increment = 5, -- Basically The Changing Value/Rounding Off
+	CurrentValue = 100, -- The Starting Value
+	Callback = function(Value)
+		-- The function that takes place when the slider changes
+		-- The variable (Value) is a number which correlates to the value the slider is currently at
 	end
-end)
+}, "Slider") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
-local VirtualInputManager = game:GetService("VirtualInputManager")
-Botao.MouseButton1Click:Connect(function()
-	VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
-end)
+
+local Dropdown = Tab:CreateDropdown({
+	Name = "Dropdown Example",
+	Description = nil,
+	Options = {"Option 1","Option 2","Option 3","Option 4","Option 5","Option 6"},
+	CurrentOption = {"Option 1"},
+	MultipleOptions = false,
+	SpecialType = nil,
+	Callback = function(Options)
+		-- The function that takes place when the selected option is changed
+		-- If MultipleOptions is true then The variable (Options) is a table of strings for the current selected options. Else, it is a string of the currentoption
+	end
+}, "Dropdown") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+
+local Bind = Tab:CreateBind({
+	Name = "Bind Example",
+	Description = nil,
+	CurrentBind = "Q", -- Check Roblox Studio Docs For KeyCode Names
+	HoldToInteract = false, -- When true, Instead of toggling, You hold to achieve the active state of the Bind
+	Callback = function(BindState)
+		-- The function that takes place when the keybind is pressed
+		-- The variable (BindState) is a boolean for whether the Bind is being held or not (HoldToInteract needs to be true) OR it is whether the Bind is active
+	end,
+
+	OnChangedCallback = function(Bind)
+		-- The function that takes place when the binded key changes
+		-- The variable (Bind) is a Enum.KeyCode for the new Binded Key
+	end,
+}, "Bind") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
