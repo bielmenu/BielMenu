@@ -2,11 +2,18 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
+local screenSize = workspace.CurrentCamera.ViewportSize
+
+-- Calculando as larguras e alturas baseadas nas proporções
+local width = screenSize.X * 0.6  -- 60% da largura da tela
+local height = screenSize.Y * 0.95 -- 95% da altura da tela
+
+
 local Window = Fluent:CreateWindow({
 	Title = "💥Biel Menu New | Biel Menu De Volta💥",
-	SubTitle = "by Biel Menu",
+	SubTitle = "by Biel Menu2",
 	TabWidth = 160,
-	Size = UDim2.new(0.6,0, 0.95,0),
+	Size = UDim2.fromOffset(width, height),
 	Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
 	Theme = "Amethyst",
 	MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
