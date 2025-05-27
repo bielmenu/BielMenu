@@ -1,11 +1,11 @@
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+--local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/Manager"))()
 
 local screenSize = workspace.CurrentCamera.ViewportSize
 
 -- Calculando as larguras e alturas baseadas nas proporções
-local width = screenSize.X * 0.6  -- 60% da largura da tela
+local width = screenSize.X * 0.7  -- 60% da largura da tela
 local height = screenSize.Y * 0.95 -- 95% da altura da tela
 
 
@@ -234,24 +234,24 @@ end
 -- InterfaceManager (Allows you to have a interface managment system)
 
 -- Hand the library over to our managers
-SaveManager:SetLibrary(Fluent)
+--SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
 
 -- Ignore keys that are used by ThemeManager.
 -- (we dont want configs to save themes, do we?)
-SaveManager:IgnoreThemeSettings()
+--SaveManager:IgnoreThemeSettings()
 
 -- You can add indexes of elements the save manager should ignore
-SaveManager:SetIgnoreIndexes({})
+--SaveManager:SetIgnoreIndexes({})
 
 -- use case for doing it this way:
 -- a script hub could have themes in a global folder
 -- and game configs in a separate folder per game
 InterfaceManager:SetFolder("FluentScriptHub")
-SaveManager:SetFolder("FluentScriptHub/specific-game")
+--SaveManager:SetFolder("FluentScriptHub/specific-game")
 
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
-SaveManager:BuildConfigSection(Tabs.Settings)
+--SaveManager:BuildConfigSection(Tabs.Settings)
 
 
 Window:SelectTab(1)
@@ -264,4 +264,4 @@ Fluent:Notify({
 
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
-SaveManager:LoadAutoloadConfig()
+--SaveManager:LoadAutoloadConfig()
