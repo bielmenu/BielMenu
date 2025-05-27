@@ -1319,6 +1319,14 @@ DRR_MODULES[DRR["93"]] = {
 
 			local UIS = game:GetService("UserInputService")
 
+			-- Detecta se está no PC
+			local isPC = UIS.KeyboardEnabled and UIS.MouseEnabled
+
+			-- Esconde o botão se for PC
+			if isPC then
+				parent.TopBar.TopBarClose.Visible = false
+			end
+
 			local function toggleMenu()
 				if closed == false then
 					closed = true
@@ -1350,12 +1358,14 @@ DRR_MODULES[DRR["93"]] = {
 				end
 			end
 
-			-- Clique no botão fecha/abre
-			parent.TopBar.TopBarClose.MouseButton1Click:Connect(toggleMenu)
+			-- Clique no botão (só funciona se não for PC)
+			if not isPC then
+				parent.TopBar.TopBarClose.MouseButton1Click:Connect(toggleMenu)
+			end
 
 			-- Tecla K no PC abre/fecha
 			UIS.InputBegan:Connect(function(input, gameProcessed)
-				if gameProcessed then return end -- não executa se estiver digitando no chat ou outra UI
+				if gameProcessed then return end
 
 				if input.KeyCode == Enum.KeyCode.K then
 					toggleMenu()
@@ -1743,7 +1753,7 @@ DRR_MODULES[DRR["93"]] = {
 
 			end
 
-			function self.newDropdown(name, desc, listTable, func)
+			function self.newDropdown(name, desc, listTable, multiSele, func)
 				local newdd = reserved.Dropdown:Clone()
 				newdd.Visible = true
 				newdd.Parent = newTab
@@ -1752,34 +1762,69 @@ DRR_MODULES[DRR["93"]] = {
 				newdd.Title.Text = name
 				newdd.Description.Text = desc
 
-				for i, list in ipairs(listTable) do
+				-- Tabela para armazenar itens selecionados (somente para multiseleção)
+				local selectedItems = {}
+
+				for _, list in ipairs(listTable) do
 					local newddbtn = reserved.DropdownButton:Clone()
 					newddbtn.Visible = true
 					newddbtn.Parent = newdd.Box.ScrollingFrame
 
 					newddbtn.Name = list
 					newddbtn.name.Text = list
+
 					task.spawn(function()
 						newddbtn.MouseButton1Click:Connect(function()
-							newdd.DropdownBar.Open.Text = list
-							local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
-							twPos:Play()
-							twPos.Completed:Wait()
-							newdd.Box.Visible = false
-							func(list)
+							if multiSele then
+								-- Verifica se já estava selecionado
+								if table.find(selectedItems, list) then
+									-- Se estava, desmarca e remove da lista
+									for i, v in ipairs(selectedItems) do
+										if v == list then
+											table.remove(selectedItems, i)
+											break
+										end
+									end
+									newddbtn.name.TextColor3 = Color3.fromRGB(255, 255, 255) -- Desmarca (cor branca)
+								else
+									-- Se não estava, adiciona e marca
+									table.insert(selectedItems, list)
+									newddbtn.name.TextColor3 = Color3.fromRGB(85, 255, 127) -- Marca (verde claro)
+								end
+
+								-- Atualiza o texto do Dropdown
+								if #selectedItems > 0 then
+									newdd.DropdownBar.Open.Text = table.concat(selectedItems, ", ")
+								else
+									newdd.DropdownBar.Open.Text = "Selecionar"
+								end
+
+								-- Retorna os itens selecionados
+								func(selectedItems)
+
+							else
+								-- Comportamento padrão (single select)
+								newdd.DropdownBar.Open.Text = list
+
+								local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0, 0, 0)})
+								twPos:Play()
+								twPos.Completed:Wait()
+								newdd.Box.Visible = false
+
+								func(list)
+							end
 						end)
 					end)
-				end		
+				end
 
+				-- Abrir e fechar dropdown
 				newdd.DropdownBar.Trigger.MouseButton1Click:Connect(function()
-
-
 					if newdd.Box.Visible == false then
 						newdd.Box.Visible = true
-						local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,1.696, 0)})
+						local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0, 1.696, 0)})
 						twPos:Play()
-					elseif newdd.Box.Visible == true then
-						local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
+					else
+						local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0, 0, 0)})
 						twPos:Play()
 						twPos.Completed:Wait()
 						newdd.Box.Visible = false
@@ -1788,7 +1833,7 @@ DRR_MODULES[DRR["93"]] = {
 			end
 
 			return self
-		end
+
 
 
 
