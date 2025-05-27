@@ -1304,9 +1304,20 @@ DRR_MODULES[DRR["93"]] = {
 			task.spawn(function()
 				while true do
 					task.wait(0.1)
-					parent.TopBar.ProfileMenu.Clock.TextLabel.Text = os.date("%H:%m")
+
+					-- Horário de Brasília
+					local hora = os.date("!*t") -- Pega UTC
+					hora.hour = hora.hour - 3   -- Ajusta para UTC-3
+
+					-- Corrige se passar do limite (negativo)
+					if hora.hour < 0 then
+						hora.hour = hora.hour + 24
+					end
+
+					parent.TopBar.ProfileMenu.Clock.TextLabel.Text = string.format("%02d:%02d", hora.hour, hora.min)
 				end
 			end)
+
 			parent.TopBar.ProfileMenu.Title.TextLabel.Text = name
 			if img then
 				parent.MainBar.Logo.Image = img
@@ -1600,6 +1611,10 @@ end)
 				local a
 
 				newKey.Bind.Button.MouseButton1Click:Connect(function()
+					if not UIS.KeyboardEnabled then
+						game.ReplicatedStorage.NotifyClient:Fire("Você não é PC")
+						return
+					end
 					listening = true
 
 
