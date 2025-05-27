@@ -29,37 +29,39 @@ local Options = Fluent.Options
 
 do
 	Fluent:Notify({
-		Title = "Notification",
-		Content = "This is a notification",
-		SubContent = "SubContent", -- Optional
-		Duration = 5 -- Set to nil to make the notification not disappear
+		Title = "🚀 - Biel Menu Online",
+		Content = "Tudo pronto! Explore as funções agora mesmo.",
+		SubContent = "Dúvidas? Chama no suporte! 😉",
+		Duration = 5
 	})
+
 
 
 
 	Tabs.Main:AddParagraph({
-		Title = "Paragraph",
-		Content = "This is a paragraph.\nSecond line!"
+		Title = "🌟 Obrigado por Usar o Biel Menu 🌟",
+		Content = "Seu suporte faz este projeto continuar!\nSe divirta e aproveite ao máximo todas as funções.\n🔧 Atualizações em breve!"
 	})
 
 
 
+
 	Tabs.Main:AddButton({
-		Title = "Button",
-		Description = "Very important button",
+		Title = "Puxar Items - Novo",
+		Description = "Puxe o Items Do Jogador!",
 		Callback = function()
 			Window:Dialog({
-				Title = "Title",
-				Content = "This is a dialog",
+				Title = "Puxar Items",
+				Content = "Puxa Todos Os Items Do Jogador Quê Você Está Revistando!",
 				Buttons = {
 					{
-						Title = "Confirm",
+						Title = "Ativar",
 						Callback = function()
 							print("Confirmed the dialog.")
 						end
 					},
 					{
-						Title = "Cancel",
+						Title = "Cancelar",
 						Callback = function()
 							print("Cancelled the dialog.")
 						end
