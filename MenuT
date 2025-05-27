@@ -267,3 +267,80 @@ Fluent:Notify({
 -- You can use the SaveManager:LoadAutoloadConfig() to load a config
 -- which has been marked to be one that auto loads!
 --SaveManager:LoadAutoloadConfig()
+
+-- By Conta Teste
+
+local textura = "" -- Exemplo: rbxassetid://asset_id
+local nomeBotao = "BotaoArrastavel"
+
+local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+if playerGui:FindFirstChild("BotaoMovel") and playerGui.BotaoMovel:FindFirstChild(nomeBotao) then
+	return
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Name = "BotaoMovel"
+ScreenGui.Parent = playerGui
+
+local Botao = Instance.new("ImageButton")
+Botao.Size = UDim2.new(0, 50, 0, 50)
+Botao.Position = UDim2.new(0, 0, 0.454706937, 0)
+Botao.AutoButtonColor = true
+Botao.BorderSizePixel = 0
+Botao.Name = nomeBotao
+Botao.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner", Botao)
+UICorner.CornerRadius = UDim.new(0, 12)
+
+if textura == "" then
+	Botao.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Botao.BackgroundTransparency = 0
+	Botao.Image = ""
+else
+	Botao.BackgroundTransparency = 0
+	Botao.Image = textura
+	Botao.ScaleType = Enum.ScaleType.Stretch
+end
+
+local UserInputService = game:GetService("UserInputService")
+local dragging = false
+local dragInput, dragStart, startPos
+
+Botao.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Botao.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+Botao.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		Botao.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+local VirtualInputManager = game:GetService("VirtualInputManager")
+Botao.MouseButton1Click:Connect(function()
+	VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.LeftControl, false, game)
+end)
