@@ -409,6 +409,72 @@ RunService.RenderStepped:Connect(function(dt)
 	end
 end)
 
+CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais Recetente Que Você Matou", function()
+	
+	local Players = game:GetService("Players")
+	local TweenService = game:GetService("TweenService")
+	local TextChatService = game:GetService("TextChatService")
+
+	local localPlayer = Players.LocalPlayer
+	local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+	local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+	local alvosPendentes = {}
+	local alvosProcessados = {}
+
+	local function tp(targetPlayer)
+
+		if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+			local targetHRP = targetPlayer.Character.HumanoidRootPart
+			local destino = targetHRP.Position + Vector3.new(0, 2, 0)
+			local VELOCIDADE = 1500
+			local distancia = (destino - humanoidRootPart.Position).Magnitude
+			local duracao = distancia / VELOCIDADE
+
+			local tweenInfo = TweenInfo.new(duracao, Enum.EasingStyle.Linear)
+			local tween = TweenService:Create(humanoidRootPart, tweenInfo, {Position = destino})
+			humanoidRootPart.Anchored = true
+			tween:Play()
+			tween.Completed:Connect(function()
+				humanoidRootPart.Anchored = false
+			end)
+		end
+	end
+
+	-- Loop para encontrar jogadores mortos por você
+	task.spawn(function()
+		while true do
+			task.wait() -- reduz o número de verificações por segundo
+			for _, p in ipairs(Players:GetPlayers()) do
+				if p ~= localPlayer and not alvosProcessados[p] then
+					local char = p.Character
+					if char then
+						local hum = char:FindFirstChild("Humanoid")
+						if hum and hum.Health <= 0 then
+							local creator = hum:FindFirstChild("creator")
+							if creator and creator.Value == localPlayer then
+								table.insert(alvosPendentes, p)
+								alvosProcessados[p] = true
+							end
+						end
+					end
+				end
+			end
+		end
+	end)
+
+	-- Loop para tratar os alvos pendentes
+	task.spawn(function()
+		while true do
+			task.wait(0.1)
+			if #alvosPendentes > 0 then
+				local alvo = table.remove(alvosPendentes, 1)
+				tp(alvo)
+			end
+		end
+	end)
+	
+end)
 
 CombateTab.newToggle("Aimbot", "Aimbot - Ajude Sua Mirar Grudar na Cabeça dos Inimigos", false, function(toggleState)
 	if toggleState then
@@ -443,4 +509,52 @@ end)
 
 CombateTab.newSlider("Sensibilidade", "A Força Que o Aimbot Vai Mover Sua Camera Até o Alvo", 5, 5, 15, false, function(num)
 	AimbotSettings.Sensitivity = num
+end)
+
+local VisualTab = DrRayLibrary.newTab("Visual", "http://www.roblox.com/asset/?id=6031763426", false)
+
+VisualTab.newButton("Staff List", "Mostra Todos Os STAFFS Do Server", function()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/bielmenu/MENUBS/refs/heads/main/StaffList'))()
+end)
+
+VisualTab.newButton("Prompt 0 Delay", "Remova Os Delay De Todos Os ProximityPrompt", function()
+	game.ProximityPromptService.PromptShown:Connect(function(julioGostoso)
+		julioGostoso.HoldDuration = 0
+	end)
+end)
+
+VisualTab.newButton("Abrir Baú", "Abra Seu Baú Sem Precisar De Casa", function()
+	game.ReplicatedStorage:WaitForChild("Modules"):WaitForChild("InvRemotes"):WaitForChild("InvRequest"):InvokeServer("trasnferebau","Entro", "", 1, 1)
+end)
+
+local NoclipAtivado = false
+
+VisualTab.newToggle("Noclip", "Atravessar Paredes", AimbotSettings.FacCheck, function(toggleState)
+	if toggleState then
+		NoclipAtivado = false
+	else
+		NoclipAtivado = true
+	end
+end)
+
+local IgnoreParts = {
+	"Left Arm",
+	"Right Arm",
+	"Left Leg",
+	"Right Leg"
+}
+
+game:GetService("RunService").Stepped:Connect(function()
+	local character = game.Players.LocalPlayer.Character
+	if character then
+		for _, part in ipairs(character:GetChildren()) do
+			if part:IsA("BasePart") then
+				if table.find(IgnoreParts, part.Name) then
+					part.CanCollide = false
+				else
+					part.CanCollide = NoclipAtivado
+				end
+			end
+		end
+	end
 end)
