@@ -1660,7 +1660,7 @@ end)
 			end
 
 
-			function self.newSlider(name, desc, start, max, manageSlider, func)
+			function self.newSlider(name, desc, start, min, max, manageSlider, func)
 				local newSlider = reserved.Slider:Clone()
 
 				newSlider.MouseEnter:Connect(function()
@@ -1710,7 +1710,8 @@ end)
 					repeat
 						task.wait()
 						Percent = math.clamp((Mouse.X - Parent.AbsolutePosition.X) / Parent.AbsoluteSize.X, 0, 1)
-						perc = math.round(Percent * max)
+						perc = math.round(Percent * (max - min) + min)
+
 
 						Label.Text = tostring(perc)
 
