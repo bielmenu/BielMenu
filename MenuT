@@ -293,8 +293,147 @@ tab1.newSlider("Slider", "Epic slider",100, 1000, false, function(num)
 	print(num)
 end)
 
-local tab2 = DrRayLibrary.newTab("Main 2", "")
+local CombateTab = DrRayLibrary.newTab("Combate", "http://www.roblox.com/asset/?id=6034509987", false)
 
-tab2.newButton("Button", "Prints Hello!", function()
-	print('Hello!')
+
+
+
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local isMobile = true
+local Ativado = false
+
+local AimbotSettings = {
+	TeamCheck = false,
+	FacCheck = true,
+	AliveCheck = true,
+	LockPart = "Head",
+	FOV = 90,
+	FOVColor = Color3.fromRGB(85, 0, 127),
+	LockedColor = Color3.fromRGB(153, 0, 230),
+	Sensitivity = 10,
+	BigHead = false
+}
+
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Visible = false
+FOVCircle.Radius = AimbotSettings.FOV
+FOVCircle.Thickness = 2
+FOVCircle.Transparency = 1
+FOVCircle.Color = AimbotSettings.FOVColor
+FOVCircle.Filled = false
+
+local function GetClosestTarget()
+	local closestPlayer = nil
+	local shortestDistance = AimbotSettings.FOV
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(AimbotSettings.LockPart) then
+
+			if AimbotSettings.FacCheck and player.ValoresSalvados.Faccao.Value == LocalPlayer.ValoresSalvados.Faccao.Value then
+				--game.ReplicatedStorage.NotifyClient:Fire("Não Foi Possivel Grudar no "..player.Name.." porque ele é da mesma facção")
+				continue
+			end
+
+
+			if AimbotSettings.TeamCheck and player.Team == LocalPlayer.Team then continue end
+			if AimbotSettings.AliveCheck then
+				local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+				if humanoid and humanoid.Health <= 0 then continue end
+			end
+
+			local part = player.Character[AimbotSettings.LockPart]
+			local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+			if onScreen then
+				local inputPos = isMobile and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+				local distance = (Vector2.new(screenPos.X, screenPos.Y) - inputPos).Magnitude
+				if distance < shortestDistance then
+					shortestDistance = distance
+					closestPlayer = player
+				end
+			end
+		end
+	end
+
+	return closestPlayer
+end
+
+RunService.RenderStepped:Connect(function(dt)
+	if not Ativado then return end
+
+	FOVCircle.Position = isMobile
+		and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+		or Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+			local head = player.Character.Head
+
+			if Ativado then
+				-- Apenas modifica uma vez
+				if not head:FindFirstChild("AimbotMod") then
+					local mod = Instance.new("BoolValue")
+					mod.Name = "AimbotMod"
+					mod.Parent = head
+					if AimbotSettings.BigHead then
+						head.Size = Vector3.new(6, 6, 6)
+						head.Transparency = 1
+						local face = head:FindFirstChild("face")
+						if face then face.Transparency = 1 end
+					end
+
+				end
+			else
+				-- Reset visual
+				if head:FindFirstChild("AimbotMod") then
+					head.Size = Vector3.new(1, 1, 1)
+					head.Transparency = 0
+					local face = head:FindFirstChild("face")
+					if face then face.Transparency = 0 end
+					head:FindFirstChild("AimbotMod"):Destroy()
+				end
+			end
+		end
+	end
+
+	local target = GetClosestTarget()
+
+	if target and target.Character and target.Character:FindFirstChild(AimbotSettings.LockPart) then
+		FOVCircle.Color = AimbotSettings.LockedColor
+		local part = target.Character[AimbotSettings.LockPart]
+		local goalCFrame = CFrame.new(Camera.CFrame.Position, part.Position)
+		local alpha = math.clamp(AimbotSettings.Sensitivity * dt, 0.05, 1)
+		Camera.CFrame = Camera.CFrame:Lerp(goalCFrame, alpha)
+	else
+		FOVCircle.Color = AimbotSettings.FOVColor
+	end
+end)
+
+
+CombateTab.newToggle("Aimbot", "Aimbot - Ajude Sua Mirar Grudar na Cabeça dos Inimigos", false, function(toggleState)
+	if toggleState then
+		Ativado = true
+	else
+		Ativado = false
+	end
+end)
+
+CombateTab.newToggle("Fac Check", "Verifica Se o Alvo é Da Mesma Facção se For Não Gruda", AimbotSettings.FacCheck, function(toggleState)
+	if toggleState then
+		AimbotSettings.FacCheck = true
+	else
+		AimbotSettings.FacCheck = false
+	end
+end)
+
+CombateTab.newToggle("Time Check", "Verifica Se o Alvo é Do Mesmo Time se For Não Gruda", AimbotSettings.TeamCheck, function(toggleState)
+	if toggleState then
+		AimbotSettings.TeamCheck = true
+	else
+		AimbotSettings.TeamCheck = false
+	end
 end)
