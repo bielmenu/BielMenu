@@ -502,12 +502,12 @@ CombateTab.newToggle("Time Check", "Verifica Se o Alvo é Do Mesmo Time se For N
 	end
 end)
 
-CombateTab.newSlider("Fov", "O Tamanho do Circulo Que Vai Grudar", 50, 50, 200, false, function(num)
+CombateTab.newSlider("Fov", "O Tamanho do Circulo Que Vai Grudar", AimbotSettings.FOV, 50, 200, false, function(num)
 	FOVCircle.Radius = num
 	AimbotSettings.FOV = num
 end)
 
-CombateTab.newSlider("Sensibilidade", "A Força Que o Aimbot Vai Mover Sua Camera Até o Alvo", 5, 5, 15, false, function(num)
+CombateTab.newSlider("Sensibilidade", "A Força Que o Aimbot Vai Mover Sua Camera Até o Alvo", AimbotSettings.Sensitivity, 5, 15, false, function(num)
 	AimbotSettings.Sensitivity = num
 end)
 
@@ -528,8 +528,13 @@ VisualTab.newButton("Abrir Baú", "Abra Seu Baú Sem Precisar De Casa", function
 end)
 
 local NoclipAtivado = false
+local LockPickAtivado = false
+local SempreDay = false
+local Speed = 100
+local SpeedAtivado = false
+local PuxarArmaSafe = false
 
-VisualTab.newToggle("Noclip", "Atravessar Paredes", AimbotSettings.FacCheck, function(toggleState)
+VisualTab.newToggle("Noclip", "Atravessar Paredes", NoclipAtivado, function(toggleState)
 	if toggleState then
 		NoclipAtivado = false
 	else
@@ -545,7 +550,8 @@ local IgnoreParts = {
 }
 
 game:GetService("RunService").Stepped:Connect(function()
-	local character = game.Players.LocalPlayer.Character
+	local player = game.Players.LocalPlayer
+	local character = player.Character
 	if character then
 		for _, part in ipairs(character:GetChildren()) do
 			if part:IsA("BasePart") then
@@ -557,4 +563,170 @@ game:GetService("RunService").Stepped:Connect(function()
 			end
 		end
 	end
+	
+	if LockPickAtivado and player.PlayerGui:FindFirstChild("LockpickTentativa") then
+		local screenGui = player.PlayerGui:FindFirstChild("LockpickTentativa")
+		local area:Frame = player.PlayerGui:FindFirstChild("LockpickTentativa"):WaitForChild("Frame"):WaitForChild("progresso"):WaitForChild("areaCerteira")
+		area.Size = UDim2.new(1,0,1,0)
+	end
+	
+	if SempreDay then
+		local Lighting = game:GetService("Lighting")
+		Lighting.ClockTime = 14
+	end
+
+	if Speed and SpeedAtivado then
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid and player:GetAttribute("agachado") == true then
+			humanoid.WalkSpeed = Speed
+		end
+	end
+	
+	if PuxarArmaSafe then
+		if game.Players.LocalPlayer:GetAttribute("SafeImp") then
+			game.Players.LocalPlayer:SetAttribute("SafeImp", false)
+		end
+	end
+	
+end)
+
+local ClTab = DrRayLibrary.newTab("CL", "http://www.roblox.com/asset/?id=6022668911", false)
+
+local CL = false
+local VidaKick = 30
+
+local function monitorHealth()
+	local player = game.Players.LocalPlayer
+	local character = player.Character
+	if character and character:FindFirstChild("Humanoid") then
+		local humanoid = character.Humanoid
+		humanoid.HealthChanged:Connect(function(health)
+			if health <= VidaKick and CL then
+				player:Kick("Auto CL Por Que Sua Vida Tava Abaixo De " .. VidaKick)
+			end
+		end)
+	end
+end
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+	monitorHealth()
+end)
+
+if game.Players.LocalPlayer.Character then
+	monitorHealth()
+end
+
+ClTab.newToggle("Auto CL", "Você Tomará Kick Quanto Morrer", CL, function(toggleState)
+	if toggleState then
+		CL = true
+	else
+		CL = false
+	end
+end)
+
+ClTab.newSlider("Vida Para Dar CL", "A Quatidade Da Vida Para Ativar o CL", 30, 0, 100, false, function(num)
+	VidaKick = num
+end)
+
+local LockPickTab = DrRayLibrary.newTab("LockPick", "http://www.roblox.com/asset/?id=6034767641", false)
+
+local RoubarCarro = false
+
+game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promt)
+	if promt.Name == "DrivePrompt" and RoubarCarro then
+		local seat = promt.Parent.Parent
+		seat:Sit(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"))
+	end
+end)
+
+LockPickTab.newToggle("Roubar Carro Trancado", "Você Pode Entrar Em Carros Mesmo Estando Trancado", RoubarCarro, function(toggleState)
+	if toggleState then
+		RoubarCarro = true
+	else
+		RoubarCarro = false
+	end
+end)
+
+LockPickTab.newToggle("LockPick Facil", "A Chance De Acerto Da LockPick Fica Em 100%", LockPickAtivado, function(toggleState)
+	if toggleState then
+		LockPickAtivado = true
+	else
+		LockPickAtivado = false
+	end
+end)
+
+local TpTab = DrRayLibrary.newTab("Teleportes", "http://www.roblox.com/asset/?id=6034754439", false)
+
+local function addTeleportButton(name, cframe)
+	TpTab.newButton(name, string.format("Teleportar Para %s", name), function()
+		local player = game.Players.LocalPlayer
+		if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+			player.Character:MoveTo(cframe.Position + Vector3.new(0, 3, 0))
+		end
+	end)
+end
+
+addTeleportButton("Teleport Praça", CFrame.new(-291.579559, 3.26299787, 342.192535))
+addTeleportButton("Teleport Gás", CFrame.new(-469.959015, 3.25349784, -54.3936005))
+addTeleportButton("Teleport HP", CFrame.new(-543.439941, 3.26299858, 645.16864))
+addTeleportButton("Teleport Tabacaria", CFrame.new(-83.1141129, 13.1430578, 74.7073364))
+addTeleportButton("Teleport Garagem", CFrame.new(-466.870148, 7.64567232, 350.242737))
+addTeleportButton("Teleport Concessionaria", CFrame.new(-91.3902893, 8.07136822, 520.355347))
+addTeleportButton("Teleport Gari", CFrame.new(-518.672852, 3.16749811, -1.16962147, 0, 0, -1, 0, 1, 0, 1, 0, 0))
+addTeleportButton("Teleport Imobiliaria", CFrame.new(-284.904785, 8.26088619, -72.2896194, 0, 0, -1, 0, 1, 0, 1, 0, 0))
+addTeleportButton("Teleport PM", CFrame.new(-980.181458, 2.27553082, 467.080536, 1, 0, 0, 0, 1, 0, 0, 0, 1))
+addTeleportButton("Teleport PRF", CFrame.new(6662.24512, 36.6637421, 5047.83838, 0.707134247, 0, 0.707079291, 0, 1, 0, -0.707079291, 0, 0.707134247))
+addTeleportButton("Teleport Mineração", CFrame.new(201.932144, 2.76136589, 145.50531, 0, 0, 1, 0, 1, -0, -1, 0, 0))
+addTeleportButton("Teleport Mecânica", CFrame.new(-180.608261, 3.29813337, -532.4151, 0.422592998, -0, -0.906319618, 0, 1, -0, 0.906319618, 0, 0.422592998))
+addTeleportButton("Teleport Fazenda", CFrame.new(817.243225, 3.26249814, -87.316864, 0, 0, 1, 0, 1, 0, -1, 0, 0))
+addTeleportButton("Teleport Prefeitura", CFrame.new(-289.5747375488281, 20.34406089782715, 117.11897277832031))
+addTeleportButton("Teleport Banco", CFrame.new(-27.2709007, 11.5685892, 418.200653, 1, 0, 0, 0, 1, 0, 0, 0, 1))
+addTeleportButton("Teleport Ilegal", CFrame.new(11969.873046875, 38.66408157348633, 12782.341796875))
+addTeleportButton("Teleport Predio 1", CFrame.new(-1618.034912109375, 4.741213321685791, 552.136962890625))
+addTeleportButton("Teleport Devs Mini City", CFrame.new(2555.44263, 303.167755, -1004.13763, -0.422592998, 0, 0.906319618, 0, 1, 0, -0.906319618, 0, -0.422592998))
+addTeleportButton("Teleport Lavagem", CFrame.new(19784.5508, 69.3496857, 13125.2607))
+addTeleportButton("Teleport Mansão Abondonada", CFrame.new(-2556.1145, 255.432526, 1218.24072))
+addTeleportButton("Teleport Areoporto", CFrame.new(11356.9043, 17.9186935, 9688.08984))
+
+local MiscTab = DrRayLibrary.newTab("Misc", "http://www.roblox.com/asset/?id=6023426988", false)
+
+MiscTab.newButton("Entrar Menor Server", "Você Entra no Menor Server Disponivel", function()
+	local success, err = pcall(function()
+		local module = loadstring(game:HttpGet("https://raw.githubusercontent.com/raw-scriptpastebin/FE/main/Server_Hop_Settings"))()
+		module:Teleport(game.PlaceId)
+	end)
+
+	if not success then
+		warn("Erro ao trocar de servidor: " .. tostring(err))
+	else
+		print("Servidor trocado com sucesso!")
+	end
+end)
+
+MiscTab.newToggle("Speed", "Corra Super Rapido Quanto Estiver Agachado", false, function(toggleState)
+	if toggleState then
+		SpeedAtivado = true
+	else
+		SpeedAtivado = false
+	end
+end)
+
+MiscTab.newToggle("Sempre Dia", "Deixe O Jogo Para Você Sempre Dia", false, function(toggleState)
+	if toggleState then
+		SempreDay = true
+	else
+		SempreDay = false
+	end
+end)
+
+MiscTab.newToggle("Puxar Arma Safe", "Permite Puxar Armamento Dentro De Safe-Zone", false, function(toggleState)
+	if toggleState then
+		PuxarArmaSafe = true
+	else
+		PuxarArmaSafe = false
+	end
+end)
+
+ClTab.newSlider("Speed", "A Velocidade Que Vai Correr Agachado", 100, 50, 250, false, function(num)
+	Speed = num
 end)
