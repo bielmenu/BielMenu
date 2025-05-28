@@ -4,20 +4,98 @@ local window = DrRayLibrary:Load("Biel Menu", "Default")
 
 local tab1 = DrRayLibrary.newTab("Main", "", true)
 
+local function deletarNotifyDeErro()
+	local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+	for _, gui in ipairs(playerGui:GetChildren()) do
+		if gui.Name == "NotifyGui" and gui:IsA("ScreenGui") then
+			local frame = gui:FindFirstChild("Frame")
+			if frame then
+				for _, child in ipairs(frame:GetChildren()) do
+					if child:IsA("TextLabel") and child.Text:match("^Error #%d+") then
+						child:Destroy() -- Remove toda a notificação
+						print("Notificação de erro removida:", child.Text)
+					end
+				end
+			end
+		end
+	end
+end
+
 tab1.newButton("Auto Puxar Items", "Puxe Todos Items De Quem Você Está Revistando!", function()
-	print('Hello!')
+
+	local outroCont = game.Players.LocalPlayer.PlayerGui:WaitForChild("BackpackNova"):WaitForChild("Inventario"):WaitForChild("Outro").conteudo
+
+
+	while true do
+		local revistaInfo = game.Players.LocalPlayer:FindFirstChild("RevistaPlayer")
+
+		if revistaInfo and revistaInfo.Value ~= nil then
+			local invTarget = revistaInfo.Value:FindFirstChild("Inv")
+
+			if invTarget then
+				local items = invTarget:GetChildren()
+
+				for i, item in ipairs(items) do
+					local args = {
+						"mudaInv",
+						tostring(i),
+						item.Name,
+						1
+					}
+
+					local itemGui = outroCont:FindFirstChild(item.Name, true)
+
+					if itemGui and itemGui:FindFirstChild("Qnt") and itemGui.Qnt:IsA("TextLabel") then
+						local text = itemGui.Qnt.Text
+
+						if text:sub(1, 1) == "x" then
+							text = text:sub(2)
+						end
+
+						local qtd = tonumber(text)
+						if qtd and qtd >= 1 then
+							args[4] = qtd
+						else
+							args[4] = 1
+						end
+					end
+
+					task.spawn(function()
+						local invRequest = game.ReplicatedStorage:WaitForChild("Modules"):WaitForChild("InvRemotes"):WaitForChild("InvRequest")
+						invRequest:InvokeServer(unpack(args))
+					end)
+				end
+			end
+		end
+		deletarNotifyDeErro()
+		task.wait(.1)
+	end
+
 end)
 
-tab1.newToggle("Revistar (T)", "Toggle! (prints the state)", true, function(toggleState)
-	if toggleState then
-		print("On")
-	else
-		print("Off")
+local KeyR = nil
+
+--[[tab1.newToggle("Revistar ()", "", true, function(toggleState)
+    if toggleState then
+        print("On")
+    else
+        print("Off")
+    end
+end)]]
+
+game.UserInputService.InputBegan:Connect(function(input, gp)
+	if gp then return end
+	if KeyR and input.KeyCode == KeyR then
+		
+		game:GetService("ReplicatedStorage"):WaitForChild("RemoteNovos"):WaitForChild("bixobrabo"):FireServer("/revistar")
+		
 	end
 end)
 
 tab1.newKeybind("Revistar (PC)", "Clica a Tecla Para Revistar!", function(key)
-	print(key)
+	print(key.KeyCode)
+	KeyR = key.KeyCode
 end)
 
 tab1.newDropdown("Dropdown", "Select one of these options!", {"water", "dog", "air", "bb", "airplane", "wohhho", "yeay", "delete"}, function(selectedOption)
