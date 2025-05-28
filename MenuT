@@ -436,6 +436,11 @@ CombateTab.newToggle("Time Check", "Verifica Se o Alvo é Do Mesmo Time se For N
 	end
 end)
 
+CombateTab.newSlider("Fov", "O Tamanho do Circulo Que Vai Grudar", 50, 50, 200, false, function(num)
+	FOVCircle.Radius = num
+	AimbotSettings.FOV = num
+end)
+
 CombateTab.newSlider("Sensibilidade", "A Força Que o Aimbot Vai Mover Sua Camera Até o Alvo", 5, 5, 15, false, function(num)
 	AimbotSettings.Sensitivity = num
 end)
