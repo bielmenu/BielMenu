@@ -22,7 +22,7 @@ local function deletarNotifyDeErro()
 	end
 end
 
-tab1.newButton("Auto Puxar Items", "Puxe Todos Items De Quem Você Está Revistando!", function()
+tab1.newButton("Auto Puxar Items", "Puxe Todos Item	s De Quem Você Está Revistando!", function()
 
 	local outroCont = game.Players.LocalPlayer.PlayerGui:WaitForChild("BackpackNova"):WaitForChild("Inventario"):WaitForChild("Outro").conteudo
 
@@ -102,7 +102,7 @@ tab1.newDropdown("Dropdown", "Select one of these options!", {"water", "dog", "a
 	print(selectedOption)
 end)
 
-tab1.newSlider("Slider", "Epic slider", 1000, false, function(num)
+tab1.newSlider("Slider", "Epic slider",100, 1000, false, function(num)
 	print(num)
 end)
 
