@@ -25,9 +25,9 @@ DRR["3"]["CornerRadius"] = UDim.new(0.10000000149011612, 0);
 -- DrRay.TopBar.ScrollingFrame
 DRR["4"] = Instance.new("ScrollingFrame", DRR["2"]);
 DRR["4"]["Active"] = true;
-DRR["4"]["ScrollingDirection"] = Enum.ScrollingDirection.Y;
+DRR["4"]["ScrollingDirection"] = Enum.ScrollingDirection.X;
 DRR["4"]["BorderSizePixel"] = 0;
-DRR["4"]["CanvasSize"] = UDim2.new(0.10000000149011612, 0, 0, 0);
+DRR["4"]["CanvasSize"] = UDim2.new(0, 0, 0, 0);
 DRR["4"]["BackgroundColor3"] = Color3.fromRGB(26, 26, 36);
 DRR["4"]["AutomaticCanvasSize"] = Enum.AutomaticSize.X;
 DRR["4"]["BackgroundTransparency"] = 1;
@@ -298,16 +298,14 @@ DRR["27"] = Instance.new("UIAspectRatioConstraint", DRR["2"]);
 DRR["27"]["AspectRatio"] = 5.724700927734375;
 
 -- DrRay.MainBar
-DRR["28"] = Instance.new("ScrollingFrame", DRR["1"]);
+DRR["28"] = Instance.new("Frame", DRR["1"]);
 DRR["28"]["BorderSizePixel"] = 0;
 DRR["28"]["BackgroundColor3"] = Color3.fromRGB(42, 42, 58);
 DRR["28"]["Size"] = UDim2.new(0.5404488444328308, 0, 0.5745577812194824, 0);
 DRR["28"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 DRR["28"]["Position"] = UDim2.new(0.23000000417232513, 0, -0.6119999885559082, 0);
 DRR["28"]["Name"] = [[MainBar]];
-DRR["28"]["CanvasSize"] = UDim2.new(0, 2, 0, 0);
-DRR["28"]["AutomaticCanvasSize"] = Enum.AutomaticSize.X;
-DRR["28"]["ScrollingDirection"] = Enum.ScrollingDirection.X;
+
 -- DrRay.MainBar.UICorner
 DRR["29"] = Instance.new("UICorner", DRR["28"]);
 DRR["29"]["CornerRadius"] = UDim.new(0.029999999329447746, 0);
