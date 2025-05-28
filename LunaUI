@@ -1692,7 +1692,7 @@ end)
 				local delayTw = 0.3
 
 				-- Definir valor inicial do slider
-				local initialPercent = math.clamp(start / max, 0, 1)
+				local initialPercent = math.clamp((start - min) / (max - min), 0, 1)
 				perc = start
 				Percent = initialPercent
 
