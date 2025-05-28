@@ -688,7 +688,7 @@ VisualTab.newToggle("Esp", "Ative Uma Linha é o Nome", false, function(toggleSt
 	end
 end)
 
-local NoclipAtivado = false
+local NoclipAtivado = true
 local LockPickAtivado = false
 local SempreDay = false
 local Speed = 100
