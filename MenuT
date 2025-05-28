@@ -294,6 +294,10 @@ local CombateTab = DrRayLibrary.newTab("Combate", "http://www.roblox.com/asset/?
 
 
 
+CombateTab.newButton("AimBot", "Aimbot Mobile", function()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/yzeedw/Mortalv2-main/main/universal%20silent%20aim%20by%20Mortalexploits'))()
+end)
+
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Camera = workspace.CurrentCamera
@@ -845,6 +849,7 @@ VisualTab.newButton("Ver Items", "Seja os Item Dos Players Equipada, 1 2 3", fun
 		warn("UI já foi criada.")
 	end
 end)
+
 
 local NoclipAtivado = true
 local LockPickAtivado = false
