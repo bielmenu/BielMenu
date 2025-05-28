@@ -858,7 +858,7 @@ local Speed = 100
 local SpeedAtivado = false
 local PuxarArmaSafe = false
 
-VisualTab.newToggle("Noclip", "Atravessar Paredes", NoclipAtivado, function(toggleState)
+VisualTab.newToggle("Noclip", "Atravessar Paredes", false, function(toggleState)
 	if toggleState then
 		NoclipAtivado = false
 	else
