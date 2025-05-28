@@ -403,7 +403,7 @@ RunService.RenderStepped:Connect(function(dt)
 		local part = target.Character[AimbotSettings.LockPart]
 		local goalCFrame = CFrame.new(Camera.CFrame.Position, part.Position)
 		local alpha = math.clamp(AimbotSettings.Sensitivity * dt, 0.05, 1)
-		Camera.CFrame = Camera.CFrame:Lerp(goalCFrame, alpha)
+		Camera.CFrame = Camera.CFrame:Lerp(goalCFrame, 1)
 	else
 		FOVCircle.Color = AimbotSettings.FOVColor
 	end
@@ -727,6 +727,6 @@ MiscTab.newToggle("Puxar Arma Safe", "Permite Puxar Armamento Dentro De Safe-Zon
 	end
 end)
 
-ClTab.newSlider("Speed", "A Velocidade Que Vai Correr Agachado", 100, 50, 250, false, function(num)
+MiscTab.newSlider("Speed", "A Velocidade Que Vai Correr Agachado", 100, 50, 250, false, function(num)
 	Speed = num
 end)
