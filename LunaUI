@@ -1805,9 +1805,9 @@ end)
 					task.spawn(function()
 						newddbtn.MouseButton1Click:Connect(function()
 							newdd.DropdownBar.Open.Text = list
-							local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
-							twPos:Play()
-							twPos.Completed:Wait()
+						--	local twPos = twServ:Create(newdd.Box, TweenInfo.new(0.15), {Size = UDim2.new(0.97, 0,0, 0)})
+						--	twPos:Play()
+						--	twPos.Completed:Wait()
 							newdd.Box.Visible = false
 							func(list)
 						end)
