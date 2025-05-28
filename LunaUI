@@ -305,7 +305,7 @@ DRR["28"]["Size"] = UDim2.new(0.5404488444328308, 0, 0.5745577812194824, 0);
 DRR["28"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 DRR["28"]["Position"] = UDim2.new(0.23000000417232513, 0, -0.6119999885559082, 0);
 DRR["28"]["Name"] = [[MainBar]];
-DRR["28"]["CanvasSize"] = UDim2.new(0, 0, 0, 0);
+DRR["28"]["CanvasSize"] = UDim2.new(0, 2, 0, 0);
 DRR["28"]["AutomaticCanvasSize"] = Enum.AutomaticSize.X;
 DRR["28"]["ScrollingDirection"] = Enum.ScrollingDirection.X;
 -- DrRay.MainBar.UICorner
