@@ -361,9 +361,10 @@ end
 RunService.RenderStepped:Connect(function(dt)
 	if not Ativado then return end
 
-	FOVCircle.Position = isMobile
-		and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-		or Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+	local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+
+	FOVCircle.Position = isMobile and center or (UserInputService:GetMouseLocation() - Vector2.new(0, 36))
+
 
 	for _, player in ipairs(Players:GetPlayers()) do
 		if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
@@ -402,7 +403,6 @@ RunService.RenderStepped:Connect(function(dt)
 		FOVCircle.Color = AimbotSettings.LockedColor
 		local part = target.Character[AimbotSettings.LockPart]
 		local goalCFrame = CFrame.new(Camera.CFrame.Position, part.Position)
-		local alpha = math.clamp(AimbotSettings.Sensitivity * dt, 0.05, 1)
 		Camera.CFrame = Camera.CFrame:Lerp(goalCFrame, 1)
 	else
 		FOVCircle.Color = AimbotSettings.FOVColor
