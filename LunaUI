@@ -1660,19 +1660,18 @@ end)
 			end
 
 
-			function self.newSlider(name, desc, max, manageSlider, func)
+			function self.newSlider(name, desc, start, max, manageSlider, func)
 				local newSlider = reserved.Slider:Clone()
 
 				newSlider.MouseEnter:Connect(function()
 					local twBtn = twServ:Create(newSlider, TweenInfo.new(0.2), { Transparency = 0 })
-
 					twBtn:Play()
 				end)
 				newSlider.MouseLeave:Connect(function()
 					local twBtn = twServ:Create(newSlider, TweenInfo.new(0.2), { Transparency = 0.4 })
-
 					twBtn:Play()
 				end)
+
 				newSlider.Visible = true
 				newSlider.Name = name
 				newSlider.Parent = newTab
@@ -1692,33 +1691,50 @@ end)
 				local MouseDown = false
 				local delayTw = 0.3
 
+				-- Definir valor inicial do slider
+				local initialPercent = math.clamp(start / max, 0, 1)
+				perc = start
+				Percent = initialPercent
+
+				Label.Text = tostring(start)
+				Fill.Size = UDim2.fromScale(initialPercent, 1)
+
+				if manageSlider == false then
+					func(start)
+				elseif manageSlider == true then
+					func(start, Label)
+				end
+
 				local function Update()
 					MouseDown = true
 					repeat
 						task.wait()
 						Percent = math.clamp((Mouse.X - Parent.AbsolutePosition.X) / Parent.AbsoluteSize.X, 0, 1)
 						perc = math.round(Percent * max)
+
+						Label.Text = tostring(perc)
+
 						if manageSlider == false then
-							Label.Text = perc
 							func(perc)
 						elseif manageSlider == true then
-							Label.Text = perc
 							func(perc, Label)
 						end
+
 						local tween = tweenServ:Create(Fill, TweenInfo.new(delayTw, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.fromScale(Percent, 1) })
 						tween:Play()
+
 					until MouseDown == false
 				end
 
 				Trigger.MouseButton1Down:Connect(Update)
 
 				UIS.InputEnded:Connect(function(input)
-					if input.UserInputType ==  Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 						MouseDown = false
 					end
 				end)
-
 			end
+
 
 			function self.newToggle(title, desc, toggle, func)
 				local realToggle = toggle
