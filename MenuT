@@ -1,3 +1,82 @@
+
+
+local versao = "BETA 2.5.3"
+
+
+
+game.ReplicatedStorage.NotifyClient:Fire(string.format("Versão <font color=\'#e28e01\'>%s</font>",versao),10)
+
+local whitelist = loadstring(game:HttpGet('https://raw.githubusercontent.com/bielmenu/AcessoID/refs/heads/main/Acessos'))()
+
+local function podeUsar(userId)
+	local dados = whitelist[userId]
+	if not dados or not dados.timestamp then
+		return false, 0
+	end
+
+	return os.time() <= dados.timestamp, dados.timestamp
+end
+
+local function formatarTempoRestante(timestampFuturo)
+	local segundosRestantes = timestampFuturo - os.time()
+	if timestampFuturo == math.huge or timestampFuturo > 9999999999 then
+		return "Permanente"
+	end
+
+	if segundosRestantes <= 0 then
+		return "Expirado"
+	end
+
+	local anos = math.floor(segundosRestantes / 31536000) -- 365 dias
+	local meses = math.floor((segundosRestantes % 31536000) / 2592000) -- 30 dias
+	local dias = math.floor((segundosRestantes % 31536000) / 86400)
+	local horas = math.floor((segundosRestantes % 86400) / 3600)
+	local minutos = math.floor((segundosRestantes % 3600) / 60)
+	local segundos = segundosRestantes % 60
+
+	local partes = {}
+
+	if anos > 0 then
+		table.insert(partes, anos .. (anos == 1 and " ano" or " anos"))
+	end
+	if meses > 0 then
+		table.insert(partes, meses .. (meses == 1 and " mês" or " meses"))
+	end
+	if dias > 0 then
+		table.insert(partes, dias .. (dias == 1 and " dia" or " dias"))
+	end
+	if horas > 0 and anos == 0 and meses == 0 then
+		table.insert(partes, horas .. (horas == 1 and " hora" or " horas"))
+	end
+	if minutos > 0 and anos == 0 and meses == 0 and dias == 0 then
+		table.insert(partes, minutos .. (minutos == 1 and " minuto" or " minutos"))
+	end
+	if segundos > 0 and anos == 0 and meses == 0 and dias == 0 then
+		table.insert(partes, segundos .. (segundos == 1 and " segundo" or " segundos"))
+	end
+
+	return table.concat(partes, ", ")
+end
+
+
+
+local permitido, expiraEm = podeUsar(game:GetService("RbxAnalyticsService"):GetClientId())
+
+if not permitido then
+	game.ReplicatedStorage.NotifyClient:Fire("Você Ainda Não Possuí Acesso Ao Menu :(",10)
+	game.ReplicatedStorage.NotifyClient:Fire("Seu ID: "..game:GetService("RbxAnalyticsService"):GetClientId(),10)
+	game.ReplicatedStorage.NotifyClient:Fire("Entre Já Em Nosso Discord: <font color=\'#e28e01\'>Discord.gg/j6vapAYpPB</font>",10)
+	return
+end
+
+game.ReplicatedStorage.NotifyClient:Fire(string.format("Faltam <font color=\'#e28e01\'>%s</font>", expiraEm),10)
+
+game.ReplicatedStorage.NotifyClient:Fire("Carregando <font color=\'#e28e01\'>Biel Menu</font>",10)
+task.wait(5)
+game.ReplicatedStorage.NotifyClient:Fire("<font color=\'#e28e01\'>Biel Menu</font> Carregado",10)
+game.ReplicatedStorage.NotifyClient:Fire("Para Abrir e Fechar o Menu Clique <font color=\'#e28e01\'>K</font>",10)
+task.wait(1)
+
 local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/LunaUI"))()
 
 local window = DrRayLibrary:Load("Biel Menu", "Default")
