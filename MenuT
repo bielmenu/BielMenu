@@ -537,6 +537,10 @@ CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais 
 				local player = game.Players.LocalPlayer
 				if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
 					player.Character:MoveTo(alvo.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
+					game:GetService("ReplicatedStorage"):WaitForChild("RemoteNovos"):WaitForChild("bixobrabo"):FireServer("/revistar")
+					task.wait(.1)
+					player.Character:MoveTo(alvo.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
+					game:GetService("ReplicatedStorage"):WaitForChild("RemoteNovos"):WaitForChild("bixobrabo"):FireServer("/revistar")
 				end
 			end
 		end
