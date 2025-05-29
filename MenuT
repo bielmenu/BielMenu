@@ -147,13 +147,13 @@ tab1.newButton("Auto Puxar Items - Legit", "Puxe Apenas Alguns Items De Quem Voc
 end)
 
 tab1.newButton("Fly", "Você Pode Voar Agora :D", function()
-	
+
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/FlySystem"))()
-	
+
 end)
 
 tab1.newButton("Remover Dano De Queda", "Remova o Dano de Queda e Não Tomara Mais Dano Caindo", function()
-	
+
 	local function deleteDamageEvents()
 		for _, obj in ipairs(game:GetDescendants()) do
 			if obj:IsA("RemoteEvent") or obj:IsA("BindableEvent") then
@@ -173,7 +173,7 @@ tab1.newButton("Remover Dano De Queda", "Remova o Dano de Queda e Não Tomara Ma
 			end
 		end
 	end)
-	
+
 end)
 
 
@@ -192,9 +192,9 @@ end)]]
 game.UserInputService.InputBegan:Connect(function(input, gp)
 	if gp then return end
 	if KeyR and input.KeyCode == KeyR then
-		
+
 		game:GetService("ReplicatedStorage"):WaitForChild("RemoteNovos"):WaitForChild("bixobrabo"):FireServer("/revistar")
-		
+
 	end
 end)
 
@@ -277,7 +277,7 @@ tab1.newButton("Revistar (Mobile)", "Crie Um Botão Na Sua Tela Para Enviar Revi
 	Title.Parent = Frame
 	CloseButton.Parent = Frame
 	RevistarButton.Parent = Frame
-	
+
 end)
 
 tab1.newKeybind("Revistar (PC)", "Clica a Tecla Para Revistar!", function(key)
@@ -414,7 +414,7 @@ RunService.RenderStepped:Connect(function(dt)
 end)
 
 CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais Recetente Que Você Matou", function()
-	
+
 	local Players = game:GetService("Players")
 	local TweenService = game:GetService("TweenService")
 	local TextChatService = game:GetService("TextChatService")
@@ -427,21 +427,9 @@ CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais 
 	local alvosProcessados = {}
 
 	local function tp(targetPlayer)
-
-		if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-			local targetHRP = targetPlayer.Character.HumanoidRootPart
-			local destino = targetHRP.Position + Vector3.new(0, 2, 0)
-			local VELOCIDADE = 1500
-			local distancia = (destino - humanoidRootPart.Position).Magnitude
-			local duracao = distancia / VELOCIDADE
-
-			local tweenInfo = TweenInfo.new(duracao, Enum.EasingStyle.Linear)
-			local tween = TweenService:Create(humanoidRootPart, tweenInfo, {Position = destino})
-			humanoidRootPart.Anchored = true
-			tween:Play()
-			tween.Completed:Connect(function()
-				humanoidRootPart.Anchored = false
-			end)
+		local player = game.Players.LocalPlayer
+		if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+			player.Character:MoveTo(targetPlayer.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
 		end
 	end
 
@@ -474,10 +462,14 @@ CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais 
 			if #alvosPendentes > 0 then
 				local alvo = table.remove(alvosPendentes, 1)
 				tp(alvo)
+				task.wait(.1)
+				tp(alvo)
+				task.wait(.1)
+				tp(alvo)
 			end
 		end
 	end)
-	
+
 end)
 
 CombateTab.newToggle("Aimbot", "Aimbot - Ajude Sua Mirar Grudar na Cabeça dos Inimigos", false, function(toggleState)
@@ -841,7 +833,7 @@ local function loadScript()
 	end
 end
 
-VisualTab.newButton("Ver Items", "Seja os Item Dos Players Equipada, 1 2 3", function()
+VisualTab.newButton("Ver Items", "Veja os Item Dos Players Equipada, 1 2 3", function()
 	if not _G.createdUI then
 		_G.createdUI = true
 		coroutine.wrap(loadScript)()
@@ -887,13 +879,13 @@ game:GetService("RunService").Stepped:Connect(function()
 			end
 		end
 	end
-	
+
 	if LockPickAtivado and player.PlayerGui:FindFirstChild("LockpickTentativa") then
 		local screenGui = player.PlayerGui:FindFirstChild("LockpickTentativa")
 		local area:Frame = player.PlayerGui:FindFirstChild("LockpickTentativa"):WaitForChild("Frame"):WaitForChild("progresso"):WaitForChild("areaCerteira")
 		area.Size = UDim2.new(1,0,1,0)
 	end
-	
+
 	if SempreDay then
 		local Lighting = game:GetService("Lighting")
 		Lighting.ClockTime = 14
@@ -905,13 +897,13 @@ game:GetService("RunService").Stepped:Connect(function()
 			humanoid.WalkSpeed = Speed
 		end
 	end
-	
+
 	if PuxarArmaSafe then
 		if game.Players.LocalPlayer:GetAttribute("SafeImp") then
 			game.Players.LocalPlayer:SetAttribute("SafeImp", false)
 		end
 	end
-	
+
 end)
 
 local ClTab = DrRayLibrary.newTab("CL", "http://www.roblox.com/asset/?id=6022668911", false)
