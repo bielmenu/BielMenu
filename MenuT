@@ -1,6 +1,6 @@
 
 
-local versao = "BETA 2.5.3"
+local versao = "BETA 2.6.3"
 
 
 
@@ -77,7 +77,7 @@ game.ReplicatedStorage.NotifyClient:Fire("<font color=\'#e28e01\'>Biel Menu</fon
 game.ReplicatedStorage.NotifyClient:Fire("Para Abrir e Fechar o Menu Clique <font color=\'#e28e01\'>K</font>",10)
 task.wait(1)
 
-local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/LunaUI"))()
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/Biel%20UI"))()
 
 local window = DrRayLibrary:Load("Biel Menu", "Default")
 
