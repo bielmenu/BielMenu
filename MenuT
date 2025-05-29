@@ -504,14 +504,6 @@ CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais 
 
 	local alvosPendentes = {}
 	local alvosProcessados = {}
-
-	local function tp(targetPlayer)
-		local player = game.Players.LocalPlayer
-		if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-			player.Character:MoveTo(targetPlayer.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
-		end
-	end
-
 	-- Loop para encontrar jogadores mortos por você
 	task.spawn(function()
 		while true do
@@ -540,11 +532,12 @@ CombateTab.newButton("Ir Em Quem Matou", "Da Um Teleporte Rapido Na Pessoa Mais 
 			task.wait(0.1)
 			if #alvosPendentes > 0 then
 				local alvo = table.remove(alvosPendentes, 1)
-				tp(alvo)
-				task.wait(.1)
-				tp(alvo)
-				task.wait(.1)
-				tp(alvo)
+				
+				
+				local player = game.Players.LocalPlayer
+				if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+					player.Character:MoveTo(alvo.Character.HumanoidRootPart.Position + Vector3.new(0, 3, 0))
+				end
 			end
 		end
 	end)
@@ -589,7 +582,7 @@ end)
 local VisualTab = DrRayLibrary.newTab("Visual", "http://www.roblox.com/asset/?id=6031763426", false)
 
 VisualTab.newButton("Staff List", "Mostra Todos Os STAFFS Do Server", function()
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/bielmenu/MENUBS/refs/heads/main/StaffList'))()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/bielmenu/BielMenu/refs/heads/main/StaffList'))()
 end)
 
 VisualTab.newButton("Prompt 0 Delay", "Remova Os Delay De Todos Os ProximityPrompt", function()
