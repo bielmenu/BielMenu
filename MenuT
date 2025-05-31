@@ -69,7 +69,7 @@ if not permitido then
 	return
 end
 
-game.ReplicatedStorage.NotifyClient:Fire(string.format("Faltam <font color=\'#e28e01\'>%s</font>", expiraEm),10)
+game.ReplicatedStorage.NotifyClient:Fire(string.format("Faltam <font color=\'#e28e01\'>%s</font>", formatarTempoRestante(expiraEm)),10)
 
 game.ReplicatedStorage.NotifyClient:Fire("Carregando <font color=\'#e28e01\'>Biel Menu</font>",10)
 task.wait(5)
